@@ -389,7 +389,7 @@ class MappedConf:
             raise ConfError(errno.EINVAL,
                 f'Error occurred while copying config into confstore. {e}')
 
-    def search(self, parent_key, search_key, value):
+    def search(self, parent_key: str, search_key: str, value: str = None):
         """Search for given key under parent key in CORTX confstore."""
         return Conf.search(self._conf_idx, parent_key, search_key, value)
 
@@ -403,4 +403,6 @@ class MappedConf:
 
     def delete(self, key: str):
         """Delete key from CORTX confstore."""
-        return Conf.delete(self._conf_idx, key)
+        is_deleted = Conf.delete(self._conf_idx, key)
+        if is_deleted:
+            Conf.save(self._conf_idx)
